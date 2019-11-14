@@ -1,0 +1,3 @@
+load("/Users/mc4117/Dropbox/BS8008-1819/published/ML/practicals/data/mnist.RData")
+head(mnist)
+mnist

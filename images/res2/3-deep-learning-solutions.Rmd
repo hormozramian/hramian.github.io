@@ -1,0 +1,264 @@
+---
+title: "Day 3: deep learning"
+author: "Seth Flaxman"
+date: "4 July 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Today you will build a number of neural networks, starting with no hidden layers (equivalent to the linear model), then
+adding a few fully connected hidden layers (sometimes called the "multilayer perceptron"), then trying out 
+a convolution neural network formulation.
+
+You will need to install Keras. Follow instructions here https://keras.rstudio.com or try the following:
+```
+devtools::install_github("rstudio/keras") # if this doesn't work, first install devtools: install.packages("devtools")
+library(keras)
+install_keras()
+```
+
+Keras comes with the MNIST dataset that you saw on day 1. You can access it as follows:
+
+```{r}
+library(keras)
+mnist <- dataset_mnist()
+x_train <- mnist$train$x
+y_train <- mnist$train$y
+x_test <- mnist$test$x
+y_test <- mnist$test$y
+```
+Following (https://keras.rstudio.com/) we will preprocess a little differently than we did on day 1.
+```{r}
+# reshape
+x_train <- array_reshape(x_train, c(nrow(x_train), 784))
+x_test <- array_reshape(x_test, c(nrow(x_test), 784))
+# rescale
+x_train <- x_train / 255
+x_test <- x_test / 255
+```
+
+Now we are ready to define our neural network architecture. We will start with a linear model, connecting the 28x28 matrix of inputs
+to a single outputs unit. We will also have a bias term.
+```{r}
+model <- keras_model_sequential() 
+model %>% layer_dense(units = 1, input_shape = c(784), activation = 'linear')
+summary(model)
+```
+
+* Why are there 785 parameters total?
+**ANSWER**: There are 784 weights, one per input pixel, plus a single bias term for a total of 785 parameters.
+
+* Recall that this linear model isn't actually a sensible approach! (Why?)
+**ANSWER**: Linear regression is inappropriate for a classification problem. It gives predictions that are negative and greater than 10!
+
+Let us try training:
+```{r}
+model %>% compile(
+  loss = 'mean_squared_error',
+  optimizer = optimizer_rmsprop()
+)
+history <- model %>% fit(
+  x_train, y_train, 
+  epochs = 20, batch_size = 128, 
+  validation_split = 0.2
+)
+plot(history)
+
+## we can graphically see that our model is not doing a good job:
+yhat = model %>% predict(x_test)
+plot(y_test,yhat)
+mean(y_test == as.numeric(round(yhat))) # very low accuracy
+```
+
+Let us now switch to a more sensible model: instead of 1 output unit, we will have 10, one per class. We will need a softmax activation function.
+
+```{r}
+y_train <- to_categorical(mnist$train$y, 10)
+y_test <- to_categorical(mnist$test$y, 10)
+
+model2 <- keras_model_sequential() 
+model2 %>% layer_dense(units = 10, input_shape = c(784), activation = 'softmax')
+summary(model2)
+```
+
+* Why are there 7850 parameters now?
+**ANSWERS** There are 10 outputs, each connected to one bias term plus the 784 inputs. 7850 = (784+1) * 10
+
+Instead of squared error loss, we will minimize the multiclass version of LogLoss, often called cross-entropy:
+```{r}
+model2 %>% compile(
+  loss = 'categorical_crossentropy',
+  optimizer = optimizer_rmsprop(),
+  metrics = c('accuracy')
+)
+history <- model2 %>% fit(
+  x_train, y_train, 
+  epochs = 5, batch_size = 128, 
+  validation_split = 0.2
+)
+
+```
+
+Now we can check that our accuracy is much higher:
+
+```{r}
+model2 %>% evaluate(x_test, y_test)
+```
+* Try training for more epochs to see if you get higher test accuracy. Do you notice overfitting?
+
+I do not see overfitting after 25 epochs, but perhaps it would be evident for a larger number of epochs or with a different optimizer:
+```{r}
+model2 %>% compile(
+  loss = 'categorical_crossentropy',
+  optimizer = optimizer_rmsprop(),
+  metrics = c('accuracy')
+)
+history <- model2 %>% fit(
+  x_train, y_train, 
+  epochs = 25, batch_size = 128, 
+  validation_split = 0.2
+)
+model2 %>% evaluate(x_test, y_test)
+
+plot(history)
+```
+
+* Consider training a multilayer perceptron. Below is code for one layer, but you should also experiment with two or three, of varying widths:
+
+**ANSWER** Here is code for a deeper network; it significantly outperforms the network above with only 5 epochs.
+```{r}
+model3 <- keras_model_sequential() 
+model3 %>% 
+  layer_dense(units = 256, activation = 'relu', input_shape = c(784)) %>% 
+  layer_dense(units = 128, activation = 'relu', input_shape = c(784)) %>% 
+  layer_dense(units = 64, activation = 'relu', input_shape = c(784)) %>% 
+  layer_dense(units = 10, activation = 'softmax')
+model3 %>% compile(
+  loss = 'categorical_crossentropy',
+  optimizer = optimizer_rmsprop(),
+  metrics = c('accuracy')
+)
+history <- model3 %>% fit(
+  x_train, y_train, 
+  epochs = 5, batch_size = 128, 
+  validation_split = 0.2
+)
+model3 %>% evaluate(x_test, y_test)
+plot(history)
+
+```
+
+* Consider adding convolution layers. You will need to reshape the data slightly. Here is code with two convolution layers to get you started:
+
+**ANSWER** Our first attempt is barely better than the above. But it's possible we need to train it for a lot longer.
+```{r}
+img_rows = img_cols = 28
+x_train <- array_reshape(mnist$train$x, c(nrow(mnist$train$x), img_rows, img_cols, 1))
+x_test <- array_reshape(mnist$test$x, c(nrow(mnist$test$x), img_rows, img_cols, 1))
+input_shape <- c(img_rows, img_cols, 1)
+
+model <- keras_model_sequential() %>%
+  layer_conv_2d(filters = 2, kernel_size = c(3,3), activation = 'relu',
+                input_shape = input_shape) %>% 
+  layer_conv_2d(filters = 4, kernel_size = c(3,3), activation = 'relu') %>% 
+  layer_flatten() %>% 
+  layer_dense(units = 128, activation = 'relu') %>% 
+  layer_dense(units = 10, activation = 'softmax')
+summary(model)
+# Train model
+model %>% compile(
+  loss = 'categorical_crossentropy',
+  optimizer = optimizer_rmsprop(),
+  metrics = c('accuracy')
+)
+history <- model %>% fit(
+  x_train, y_train, 
+  epochs = 5, batch_size = 128, 
+  validation_split = 0.2
+)
+model %>% evaluate(x_test, y_test)
+```
+
+* Can you get the accuracy above 99%? You might consider adding dropout layers (``keras.layers.Dropout``) or weight decay (``kernel_regularizer = regularizer_l2(l = 0.001)``).
+
+Here is an answer that I have not yet replicated in R, which claims to get 99.25% test accuracy after 12 epochs: https://github.com/keras-team/keras/blob/master/examples/mnist_cnn.py
+
+## Deep learning with the mouse genome
+
+* Consider the mouse genome dataset from yesterday. Build a neural network for this data. Consider varying any or all of the following:
+  * Number of hidden layers
+  * Activation functions
+  * Methods for regularization (dropout, weight decay, early stopping)
+  * Number of hidden units
+You might also want to consider a convolution neural network operating in 1-dimension using ``layer_conv_1d``.
+
+Train your network using ``X_train``/``y_train``. Test your network using ``X_test``/``y_test`` from ``data/mice.rdata``. 
+
+I have also included ``X_validate``, but not ``y_validate``. Once you think you have a good model, make predictions on ``X_validate`` and submit to this Dropbox link: https://www.dropbox.com/request/5V1NRSFTI2wARHiYy62d (DEADLINE 23:00 4 July 2019.) 
+
+```{r}
+load("data/mice-with-validate.rdata")
+n_features = ncol(X_train)
+#X_train <- array_reshape(data.matrix(X_train), c(nrow(X_train), n_features, 1))
+#X_test <- array_reshape(data.matrix(X_test), c(nrow(X_test), n_features, 1))
+#X_validate <- array_reshape(data.matrix(X_validate), c(nrow(X_validate), n_features, 1))
+
+model <- keras_model_sequential() %>%
+#  layer_conv_1d(filters = 4, kernel_size = c(10), activation = 'relu',
+#                input_shape = c(n_features,1)) %>% 
+ # layer_dropout(rate = 0.9,input_shape=c(n_features)) %>%
+  layer_dense(units = 128, activation = 'relu',input_shape=c(n_features), kernel_regularizer = regularizer_l2(l = 0.001)) %>% 
+ # layer_dense(units = 64, activation = 'sigmoid',kernel_regularizer = regularizer_l2(l = 0.001)) %>% 
+  #layer_dense(units = 32, activation = 'sigmoid', kernel_regularizer = regularizer_l2(l = 0.001)) %>% 
+  #layer_dense(units = 16, activation = 'sigmoid', kernel_regularizer = regularizer_l2(l = 0.001)) %>% 
+  layer_dense(units = 8, activation = 'relu', kernel_regularizer = regularizer_l2(l = 0.001)) %>% 
+ # layer_dropout(rate = 0.5) %>%
+#  layer_conv_1d(filters = 4, kernel_size = c(10), activation = 'relu',
+#                input_shape = input_shape) %>% 
+ # layer_flatten() %>% 
+#  layer_dense(units = 5, activation = 'relu') %>% 
+ # layer_dropout(rate = 0.4) %>%
+  layer_dense(units = 1, activation = 'linear')
+summary(model)
+# Train model
+model %>% compile(
+  loss = 'mean_squared_error',
+  optimizer = optimizer_rmsprop()
+)
+early_stopping <- callback_early_stopping(monitor = 'val_loss', patience = 2)
+
+history <- model %>% fit(
+  data.matrix(X_train), y_train, 
+  epochs = 20, batch_size =512,
+  callbacks = c(early_stopping),
+  validation_split = 0.1
+)
+
+model %>% evaluate(data.matrix(X_train), y_train)
+model %>% evaluate(data.matrix(X_test), y_test)
+model %>% evaluate(data.matrix(X_validate), y_validate)
+y_hat = model %>% predict(data.matrix(X_validate))
+plot(history)
+
+```
+
+You should save your prediction using the following function so that I can automatically score them:
+```{r}
+submit_answers = function(yhat,team="Pick a nickname for yourself or team; should not contain spaces or special characters") {
+  team = gsub("[[:punct:]]", "", team)
+  team = gsub(" ", "", team, fixed = TRUE)
+
+  if(length(yhat) == 153 & class(yhat) == "numeric") {
+    id = round(abs(sum(yhat)*1000))
+    print(sprintf("Saving %s-%d.csv",team,id))
+    df = data.frame(yhat=yhat,team=team)
+    write.csv(df,sprintf("%s-%d.csv",team,id),row.names=F)
+  } else {
+    print("Something went wrong. You should supply a numeric vector yhat of length 153 containing your predictions.")
+  }
+}
+submit_answers(as.numeric(y_hat),"Example")
+```

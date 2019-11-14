@@ -1,0 +1,171 @@
+html {
+  overflow-y: hidden;
+  font-family: 'Old Standard TT', serif;
+  font-size: 14px;
+  line-height: 1.4;
+  background: rgb(255,255,255);
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.103) 74%, rgba(209, 216, 252, 0.39) 90%); 
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+body {
+  position: relative;
+  float: left;
+}
+
+.contents_0 {
+  position: fixed;
+  left: 20%;
+  right: 20%;
+  top: 0;
+  padding-top: 10px;
+  height: 125px;
+  
+  text-align: center;
+}
+
+
+.main {
+  position: fixed;
+  float: left;
+  height: calc(100% - 150px);
+  top: 135px;
+  padding-top: 10px;
+  overflow-y: scroll;
+  min-width: calc(100% - 20px);
+}
+
+.contents_home {
+  position: relative;
+  float: left;
+  left: 25%;
+  right: 25%;
+  width: 50%;
+  text-align: center;
+}
+  
+.backup {
+  position: relative;
+  float: left;
+  text-align: center;
+  color: transparent;
+  size: 1pt;
+  margin-bottom: 0;
+}
+
+.contents {
+position: relative;
+float: left;
+left: 20%;
+right: 20%;
+width: 60%;
+
+text-align: left;
+text-align: justify;
+padding-bottom: 20px;
+}
+  
+.abstract{
+float: left;
+margin: 0% 10% 2% 10%; 
+text-align: justify;
+}
+
+.paragraphs{
+  float: left;
+  position: relative;
+  text-align: justify;
+
+}
+
+.contacts{
+  margin: 0% 10% 5% 10%; 
+}
+
+  
+ul.topnav {
+  position: relative;
+  font-size: 16px;
+  list-style-type: none;
+  display: inline-block;
+  border-bottom: 3px solid black;
+  padding: 0;
+  width: 100%;
+  text-align: center;
+}
+
+ul.topnav li {
+  float: left;
+  width: 25%;
+  padding: 10px 0px;
+}
+
+ul.topnav li a {
+  color: black;
+  text-decoration: none;
+  padding: 12px 5px;
+}
+
+ul.topnav li a:hover {
+  background-color: rgba(99, 102, 243, 0.137);
+}
+
+table, th, td {
+border: 0px solid black;
+text-indent: -2px;
+text-align:left; 
+padding:0px ;
+height:0;
+margin: 0;
+line-height: 18px;
+}
+
+ul.refs {
+  width: 600px; 
+  columns: 2;
+  margin: 0;
+  padding:0;
+  display:inline-block;
+
+}
+
+ul.refs li{
+  margin: 0;
+  padding: 0;
+  display:inline-block;
+}
+
+ul.refs2 {
+  list-style: none;
+  margin: 0;
+
+  
+}
+
+
+
+@media screen and (max-width: 700px) {
+  ul.refs {
+    width: 30px;
+    columns: 1;
+    margin: 0;
+    padding:0;
+    display:inline-block;
+  
+  }
+  ul.refs li{
+    margin: 0;
+    padding: 0;
+    display:inline-block;
+  }
+  
+  ul.refs2 {
+    list-style: none;
+    margin: 0;
+  
+    
+  }
+  
+  }
+

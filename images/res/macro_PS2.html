@@ -1,0 +1,356 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>macro_PS2</title><meta name="generator" content="MATLAB 9.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-11-06"><meta name="DC.source" content="macro_PS2.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1></h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Macro-Finance 2017</a></li><li><a href="#2">Plot Time Series</a></li><li><a href="#3">Cross-Correlations</a></li></ul></div><h2 id="1">Macro-Finance 2017</h2><pre>Problem Set 2: Business Cycles Dynamics</pre><pre class="codeinput">clc
+clear
+close <span class="string">all</span>
+
+<span class="comment">% Request data from FRED data server:</span>
+c  = fred(<span class="string">'https://research.stlouisfed.org/fred2/'</span>);
+sd = <span class="string">'01/01/1948'</span>;  <span class="comment">% Start Date</span>
+ed = <span class="string">'01/12/2018'</span>;  <span class="comment">% End Date</span>
+
+<span class="comment">% FRED Series</span>
+s1 = <span class="string">'UNRATE'</span>;      <span class="comment">% Civilian Unemployment Rate</span>
+s2 = <span class="string">'INDPRO'</span>;      <span class="comment">% Industrial Production Index</span>
+s3 = <span class="string">'USRECM'</span>;      <span class="comment">% NBER-based Recession Indicators for the United States</span>
+s4 = <span class="string">'NASDAQCOM'</span>;   <span class="comment">% NASDAQ Composite Index</span>
+s5 = <span class="string">'DJIA'</span>;        <span class="comment">% Dow Jones Industrial Average</span>
+s6 = <span class="string">'RVXCLS'</span>;    <span class="comment">% Russell 3000 Total Market Index</span>
+s7 = <span class="string">'PCE'</span>;
+s8 = <span class="string">'GPDI'</span>;
+s9 = <span class="string">'GDPC1'</span>;
+
+<span class="comment">% Receives data from FRED connection c and the specified FRED series:</span>
+d1 = fetch(c,s1,sd,ed);
+d2 = fetch(c,s2,sd,ed);
+d3 = fetch(c,s3,sd,ed);
+d4 = fetch(c,s4,sd,ed);
+d5 = fetch(c,s5,sd,ed);
+d6 = fetch(c,s6,sd,ed);
+d7 = fetch(c,s7,sd,ed);
+d8 = fetch(c,s8,sd,ed);
+d9 = fetch(c,s9,sd,ed);
+
+close(c)
+<span class="comment">% For further comments see:</span>
+<span class="comment">% https://uk.mathworks.com/help/datafeed/functionlist.html</span>
+</pre><h2 id="2">Plot Time Series</h2><pre class="codeinput">f1 = figure
+subplot(3,2,1)
+plotyy(d1.Data(:,1),d1.Data(:,2),d2.Data(:,1),d2.Data(:,2))
+legend(<span class="string">'Unemployment Rate'</span>,<span class="string">'US Industrial Product'</span>,<span class="string">'location'</span>,<span class="string">'nw'</span>)
+recessionplot
+datetick(<span class="string">'x'</span>,<span class="string">'yyyy'</span>,<span class="string">'keepticks'</span>)
+
+subplot(3,2,2)
+plot(d4.Data(:,1),d4.Data(:,2),d6.Data(:,1),d6.Data(:,2))
+recessionplot
+legend(<span class="string">'NASDAQ Composite Index'</span>,<span class="string">'Russell 3000 Index'</span>,<span class="string">'location'</span>,<span class="string">'nw'</span>)
+datetick(<span class="string">'x'</span>,<span class="string">'yyyy'</span>,<span class="string">'keepticks'</span>)
+
+subplot(3,2,3)
+plotyy(d1.Data(:,1),d1.Data(:,2),d4.Data(:,1),d4.Data(:,2))
+legend(<span class="string">'Unemployment Rate'</span>,<span class="string">'NASDAQCOM'</span>,<span class="string">'location'</span>,<span class="string">'nw'</span>)
+recessionplot
+datetick(<span class="string">'x'</span>,<span class="string">'yyyy'</span>,<span class="string">'keepticks'</span>)
+
+subplot(3,2,4)
+[haxes,h1,h2] = plotyy(d2.Data(:,1),d2.Data(:,2),d4.Data(:,1),d4.Data(:,2))
+legend(<span class="string">'US Industrial Product'</span>,<span class="string">'NASDAQCOM'</span>,<span class="string">'location'</span>,<span class="string">'nw'</span>)
+recessionplot
+datetick(<span class="string">'x'</span>,<span class="string">'yyyy'</span>,<span class="string">'keepticks'</span>)
+
+subplot(3,2,5)
+plotyy(d7.Data(2:end,1),log(diff(d7.Data(:,2))),d8.Data(2:end,1),log(diff(d8.Data(:,2))))
+legend(<span class="string">'US Industrial Product'</span>,<span class="string">'NASDAQCOM'</span>,<span class="string">'location'</span>,<span class="string">'nw'</span>)
+recessionplot
+datetick(<span class="string">'x'</span>,<span class="string">'yyyy'</span>,<span class="string">'keepticks'</span>)
+
+subplot(3,2,6)
+plot(d9.Data(:,1),d9.Data(:,2)); hold <span class="string">on</span>
+plot(d8.Data(:,1),d8.Data(:,2)); hold <span class="string">on</span>
+plot(d7.Data(:,1),d7.Data(:,2)); hold <span class="string">off</span>
+recessionplot
+datetick(<span class="string">'x'</span>,<span class="string">'yyyy'</span>,<span class="string">'keepticks'</span>)
+
+<span class="comment">%wd = 'D:\Google Drive\Imperial\Teaching\1718 Macro Finance\Session 2'</span>
+<span class="comment">%set(gcf, 'PaperPosition', [-2.25 -2 46 24]) ;</span>
+<span class="comment">%set(gcf, 'PaperSize', [42.5 20.5]) ;</span>
+<span class="comment">%saveas(f1, fullfile(wd, 'f1'), 'pdf')</span>
+</pre><pre class="codeoutput">
+f1 = 
+
+  Figure (1) with properties:
+
+      Number: 1
+        Name: ''
+       Color: [0.9400 0.9400 0.9400]
+    Position: [680 558 560 420]
+       Units: 'pixels'
+
+  Use GET to show all properties
+
+
+haxes = 
+
+  1&times;2 Axes array:
+
+    Axes    Axes
+
+
+h1 = 
+
+  Line with properties:
+
+              Color: [0 0.4470 0.7410]
+          LineStyle: '-'
+          LineWidth: 0.5000
+             Marker: 'none'
+         MarkerSize: 6
+    MarkerFaceColor: 'none'
+              XData: [1&times;841 double]
+              YData: [1&times;841 double]
+              ZData: [1&times;0 double]
+
+  Use GET to show all properties
+
+
+h2 = 
+
+  Line with properties:
+
+              Color: [0.8500 0.3250 0.0980]
+          LineStyle: '-'
+          LineWidth: 0.5000
+             Marker: 'none'
+         MarkerSize: 6
+    MarkerFaceColor: 'none'
+              XData: [1&times;12246 double]
+              YData: [1&times;12246 double]
+              ZData: [1&times;0 double]
+
+  Use GET to show all properties
+
+
+</pre><img vspace="5" hspace="5" width="65%" src="f1.png" alt=""> <h2 id="3">Cross-Correlations</h2><pre class="codeinput">figure
+subplot(2,2,1)
+plotyy(d1.Data(:,1),d1.Data(:,2),d2.Data(2:end,1),diff(log(d2.Data(:,2))))
+legend(<span class="string">'Unemployment Rate'</span>,<span class="string">'Perc-Change US IP'</span>,<span class="string">'location'</span>,<span class="string">'nw'</span>)
+recessionplot
+datetick(<span class="string">'x'</span>,<span class="string">'yyyy'</span>,<span class="string">'keepticks'</span>)
+
+subplot(2,2,2)
+scatter(100*diff(log(fts2mat(tomonthly(fints(d2.Data))))),d1.Data(3:end,2))
+lsline
+recessionplot
+xlabel(<span class="string">'Perc-Change IP'</span>)
+ylabel(<span class="string">'Unemployment Rate'</span>)
+xlim([-5,5])
+ylim([0 12])
+
+subplot(2,2,3)
+x = d1.Data(2:end,2);        <span class="comment">% Unempolyment Rate</span>
+y = diff(log(d2.Data(:,2))); <span class="comment">% Percentage-Changes in Industrial Product</span>
+crosscorr(y,x,24)
+ylim([-1 1])
+
+subplot(2,2,4)
+x = diff(d1.Data(2:end,2));      <span class="comment">% Unempolyment Rate</span>
+y = diff((fts2mat(tomonthly(fints(d6.Data))))); <span class="comment">% P/Change NASDAQ Index</span>
+crosscorr(y,x,24)
+ylim([-0.5 0.5])
+
+</pre><img vspace="5" hspace="5" width="75%" src="f2.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+
+%% Macro-Finance 2017
+%  Problem Set 2: Business Cycles Dynamics
+
+clc
+clear
+close all
+
+% Request data from FRED data server:
+c  = fred('https://research.stlouisfed.org/fred2/');
+sd = '01/01/1948';  % Start Date
+ed = '01/12/2018';  % End Date
+
+% FRED Series
+s1 = 'UNRATE';      % Civilian Unemployment Rate
+s2 = 'INDPRO';      % Industrial Production Index
+s3 = 'USRECM';      % NBER-based Recession Indicators for the United States
+s4 = 'NASDAQCOM';   % NASDAQ Composite Index
+s5 = 'DJIA';        % Dow Jones Industrial Average
+s6 = 'RVXCLS';    % Russell 3000 Total Market Index
+s7 = 'PCE';
+s8 = 'GPDI';
+s9 = 'GDPC1';
+
+% Receives data from FRED connection c and the specified FRED series:
+d1 = fetch(c,s1,sd,ed);
+d2 = fetch(c,s2,sd,ed);
+d3 = fetch(c,s3,sd,ed);
+d4 = fetch(c,s4,sd,ed);
+d5 = fetch(c,s5,sd,ed);
+d6 = fetch(c,s6,sd,ed);
+d7 = fetch(c,s7,sd,ed);
+d8 = fetch(c,s8,sd,ed);
+d9 = fetch(c,s9,sd,ed);
+
+close(c)
+% For further comments see: 
+% https://uk.mathworks.com/help/datafeed/functionlist.html
+
+%% Plot Time Series 
+f1 = figure
+subplot(3,2,1)
+plotyy(d1.Data(:,1),d1.Data(:,2),d2.Data(:,1),d2.Data(:,2))
+legend('Unemployment Rate','US Industrial Product','location','nw')
+recessionplot
+datetick('x','yyyy','keepticks')
+
+subplot(3,2,2)
+plot(d4.Data(:,1),d4.Data(:,2),d6.Data(:,1),d6.Data(:,2))
+recessionplot
+legend('NASDAQ Composite Index','Russell 3000 Index','location','nw')
+datetick('x','yyyy','keepticks')
+
+subplot(3,2,3)
+plotyy(d1.Data(:,1),d1.Data(:,2),d4.Data(:,1),d4.Data(:,2))
+legend('Unemployment Rate','NASDAQCOM','location','nw')
+recessionplot
+datetick('x','yyyy','keepticks')
+
+subplot(3,2,4)
+[haxes,h1,h2] = plotyy(d2.Data(:,1),d2.Data(:,2),d4.Data(:,1),d4.Data(:,2))
+legend('US Industrial Product','NASDAQCOM','location','nw')
+recessionplot
+datetick('x','yyyy','keepticks')
+
+subplot(3,2,5)
+plotyy(d7.Data(2:end,1),log(diff(d7.Data(:,2))),d8.Data(2:end,1),log(diff(d8.Data(:,2))))
+legend('US Industrial Product','NASDAQCOM','location','nw')
+recessionplot
+datetick('x','yyyy','keepticks')
+
+subplot(3,2,6)
+plot(d9.Data(:,1),d9.Data(:,2)); hold on
+plot(d8.Data(:,1),d8.Data(:,2)); hold on
+plot(d7.Data(:,1),d7.Data(:,2)); hold off
+recessionplot
+datetick('x','yyyy','keepticks')
+
+%wd = 'D:\Google Drive\Imperial\Teaching\1718 Macro Finance\Session 2'
+%set(gcf, 'PaperPosition', [-2.25 -2 46 24]) ;
+%set(gcf, 'PaperSize', [42.5 20.5]) ;
+%saveas(f1, fullfile(wd, 'f1'), 'pdf')
+
+
+
+    
+%% Cross-Correlations
+figure
+subplot(2,2,1)
+plotyy(d1.Data(:,1),d1.Data(:,2),d2.Data(2:end,1),diff(log(d2.Data(:,2))))
+legend('Unemployment Rate','Perc-Change US IP','location','nw')
+recessionplot
+datetick('x','yyyy','keepticks')
+
+subplot(2,2,2)
+scatter(100*diff(log(fts2mat(tomonthly(fints(d2.Data))))),d1.Data(3:end,2))
+lsline
+recessionplot
+xlabel('Perc-Change IP')
+ylabel('Unemployment Rate')
+xlim([-5,5])
+ylim([0 12])
+
+subplot(2,2,3)
+x = d1.Data(2:end,2);        % Unempolyment Rate
+y = diff(log(d2.Data(:,2))); % Percentage-Changes in Industrial Product 
+crosscorr(y,x,24)
+ylim([-1 1])
+
+subplot(2,2,4)
+x = diff(d1.Data(2:end,2));      % Unempolyment Rate
+y = diff((fts2mat(tomonthly(fints(d6.Data))))); % P/Change NASDAQ Index
+crosscorr(y,x,24)
+ylim([-0.5 0.5])
+
+
+
+
+
+
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>
