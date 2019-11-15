@@ -1,8 +1,8 @@
 html {
   overflow-y: hidden;
   font-family: 'Old Standard TT', serif;
-  font-size: 14px;
-  line-height: 1.4;
+  font-size: 14.5px;
+  line-height: 1.45;
   background: rgb(255,255,255);
   background: linear-gradient(0deg, rgba(255, 255, 255, 0.103) 74%, rgba(209, 216, 252, 0.39) 90%); 
   background-repeat: no-repeat;
