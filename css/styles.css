@@ -20,7 +20,7 @@ body {
   right: 20%;
   top: 0;
   padding-top: 10px;
-  height: 125px;
+  height: 128px;
   
   text-align: center;
 }
@@ -30,7 +30,7 @@ body {
   position: fixed;
   float: left;
   height: calc(100% - 150px);
-  top: 135px;
+  top: 139px;
   padding-top: 10px;
   overflow-y: scroll;
   min-width: calc(100% - 20px);
