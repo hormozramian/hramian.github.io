@@ -3,16 +3,18 @@
 <link rel="shortcut icon" href="images/ico.png">
 
 <head>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-153284711-1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag('js', new Date());
-  
-      gtag('config', 'UA-153284711-1');
-    </script>
-    
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-153284711-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-153284711-1');
+  </script>
+
+<title>Workshop 1</title>
+
   <link rel="stylesheet" href="css/styles.css">
   <link href="https://fonts.googleapis.com/css?family=Old+Standard+TT&display=swap" rel="stylesheet">
 
@@ -90,27 +92,26 @@
     <div class="contents">
       <div class="paragraphs">
         <a style="font-weight:bold; text-decoration:none;"><mark>Session I: Trading Simulation: Bid-Ask Spread
-          (Symmetrically-infromed Traders)</mark></a><br>
-        This workshop is intended to familiarize students with optimal execution of bid-ask quotes. Key learning
-        outcomes are:
-        <ul>
+            (Symmetrically-infromed Traders)</mark></a><br>
+            <ul>
+        This workshop is intended to familiarize students with the optimal execution of bid-ask quotes. Key learning
+        outcomes are to understand the trade-off between absorbing market demand as a result of a narrow bid-ask quote
+        against obtaining a lower profit margin per transaction in a competitive environment. We focus on the following main points:
+        
           <li>Understand trade-off between posting a narrow spread against absorbing higher market demands in a
             competitive environment </li>
           <li>Understand informational give-away included in quotes posted by market participants</li>
           <li>Infer fundamental asset price to outbid the market </li>
           <li>Limit Order Book </li>
+          <li> Session Information: Closed </li>
         </ul>
-        <ul>
-          <li> Session Information: 
-          </li>
 
-        </ul>
         <br>
         <a style="font-weight:bold; text-decoration:none;">Instruction</a><br>
-
+        Instruction packs include the information on how work out the fundamental asset value and execute trades:
         <ol>
-          <li>The final asset price is given by the sum of 14 numbers – each of them between $1 and $3.</li>
-          $$\textrm{Asset Price}_0=\sum \textrm{Components}$$
+          <li>The final asset price is given by the sum of 14 numbers (<a style="font-family: consolas;">components</a>) – each of them between $1 and $3:</li>
+          $$\textrm{Asset Price}_0=\mathbb{E}_0\left[\sum_i\textrm{Component}_i\right]$$ 
           <li>Each group will receive one of the numbers in their packs. </li>
           <li>Group members should use this number and the known minimum and maximum boundaries ($14 and $42
             respectively,
@@ -128,48 +129,64 @@
             can
             adjust their bid/ask quotes – considering newly obtained price information (new numbers, bid/ask quotes of
             competitors in previous round) and positioning.</li>
-          <li></li>The facilitators also provide an exit for unwanted positions. Market makers must notify facilitators
-          of
-          their
-          desire to exit at the beginning of the round and will have to cross the bid/offer spread. Execution prices
-          will
-          be best uncleared bid and ask prices of the previous round (i.e. the best prices at which no trading took
-          place,
-          only existing positions can be traded, there are no additional size restrictions.</li>
+          <li>The facilitators also provide an exit for unwanted positions. Market makers must notify facilitators
+            of
+            their
+            desire to exit at the beginning of the round and will have to cross the bid/offer spread. Execution prices
+            will
+            be best uncleared bid and ask prices of the previous round (i.e. the best prices at which no trading took
+            place,
+            only existing positions can be traded, there are no additional size restrictions.</li>
         </ol>
         $$ \textrm{potential value} =\begin{cases}
-        \$110&\text{with probability~~} 70\%\\
-        \$100&\text{with probability~~} 20\%\\
-        \$90&\text{with probability~~} 10\%
+        \$110&\text{with probability}\hspace{1cm}70\%\\
+        \$100&\text{with probability}\hspace{1cm} 20\%\\
+        \$90&\text{with probability} \hspace{1cm}10\%
         \end{cases}$$
         <br>
-        <a style="font-weight:bold; text-decoration:none;">Optimal Execution</a><br>
+        <a style="font-weight:bold; text-decoration:none;">Optimal Execution: Trade-offs</a><br>
+        A narrow spread (aggressive) implies a lower margin per transaction. However, outbiding the market participants enables the trader to attract a larger number of transactions (volume). If you're investing in individual securities, particularly less-liquid ones, it pays to be aware of bid-ask spreads when you're buying and selling. The bid is the price that someone is willing to pay for a security at a specific point in time, whereas the ask is the price at which someone is willing to sell. The difference between the two prices is called the bid-ask spread.
+<br><br>
+Bid-ask spreads have the characteristic of heads they win, tails you lose: If you're a seller, you receive the lower price (the bid), and if you're a buyer, you pay the higher price (the ask). (Note that bid-ask spreads aren't an issue for mutual fund buyers and sellers, at least not directly, because the fund is priced just once a day, and everyone pays and receives that same price.)
+<br><br>
+If you're trading highly liquid securities, the bid-ask spread will tend to be pretty inconsequential, meaning that buyers and sellers generally agree about what the right price for a security should be. For example, the bid-ask spread for the exchange-traded fund SPDR S&P 500 (SPY), which is itself dominated by heavily traded, household-name companies such as Microsoft (MSFT) and Johnson & Johnson (JNJ), is often just a penny or two.
+<br><br>
+But bid-ask spreads can be more onerous when you're dealing in more thinly traded securities, such as small-company stocks or ETFs with light trading volume. The bid-ask spread compensates the market maker in the security (which matches buyers with sellers) in case it can't find buyers for the shares and the price moves around a lot before it does. The greater the risk of that happening, the more the market maker demands in terms of a bid-ask spread. Think of the bid-ask spread as the markup on your purchase or sale.
+<br><br>
+So how can you reduce the drag of bid-ask spreads on your returns? At the risk of stating the obvious, reducing your number of transactions is a good starting point, particularly if you're dealing in any type of illiquid security. Another way to exert more control is to use a limit order rather than a market order. By doing so, you're saying that you're not going to accept any old price when buying and selling (a market order); you only want to transact if you can get a specific price or better.
+        <br>
+
+        <div style="float: left;clear: bottom;">
+          $$ \underbrace{ \left[\text{expected price} - \frac{\stackrel{\uparrow}{\text{spread}}}{2}\right]\times
+          \stackrel{\downarrow}{\text{quantity-bought}}}_\text{ high margin but fewer transactions} +
+          \underbrace{\left[\text{expected price} + \frac{\stackrel{\uparrow}{\text{spread}}}{2}\right]\times
+          \stackrel{\downarrow}{\text{quantity-sold}}}_\text{ high margin but fewer transactions}$$
+        </div>
 
 
-        $$ \underbrace{ \left[\text{expected price} - \frac{\stackrel{\uparrow}{\text{spread}}}{2}\right]\times
-        \stackrel{\downarrow}{\text{quantity-bought}}}_\text{ high margin but fewer transactions} +
-        \underbrace{\left[\text{expected price} + \frac{\stackrel{\uparrow}{\text{spread}}}{2}\right]\times
-        \stackrel{\downarrow}{\text{quantity-sold}}}_\text{ high margin but fewer transactions}$$
 
 
-
-        </p>
+        <br>
+        <div style="float: left;clear: bottom;">
+          <img src="images/fig_sim1.png" width="30%" padding="0" margin-left="35%" hspace="4%">
+        </div>
+    
       </div>
       <div class="paragraphs">
-          <br>
-          <a style="font-weight:bold; text-decoration:none;">Limit Order Book</a><br>
-          The limit order book is the list of orders (prices at which you can transact) for a given security.
-          <ol>
-            <li>Depending on the security, these orders may be on one exchange, or aggregated across many exchanges.</li>
-            <li>This presentation will give a basic description of the order book, and how your transactions will be
-              handled by (and how they will affect) the book.</li>
-            <li>You will transact in an order book if you trade stock, futures, options, and/or other securities. </li>
-          </ol>
-          
-      
-        
+        <br>
+        <a style="font-weight:bold; text-decoration:none;">Limit Order Book</a><br>
+        The limit order book is the list of orders (prices at which you can transact) for a given security.
+        <ol>
+          <li>Depending on the security, these orders may be on one exchange, or aggregated across many exchanges.</li>
+          <li>This presentation will give a basic description of the order book, and how your transactions will be
+            handled by (and how they will affect) the book.</li>
+          <li>You will transact in an order book if you trade stock, futures, options, and/or other securities. </li>
+        </ol>
 
-        </div>
+
+
+
+      </div>
       <br>
       <br>
 
