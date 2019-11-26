@@ -93,9 +93,10 @@
       <div class="paragraphs">
         <a style="font-weight:bold; text-decoration:none;"><mark>Session I: Trading Simulation: Bid-Ask Spread
             (Symmetrically-infromed Traders)</mark></a><br>
-        This workshop is intended to familiarize students with the optimal execution of bid-ask quotes on a simulated trading platform. Key learning
+        This workshop is intended to familiarize students with the optimal execution of bid-ask quotes on a simulated
+        trading platform. Key learning
         outcomes are:
-        <ul >
+        <ul>
           <li>Understand trade-off between posting a narrow spread against absorbing higher market demands in a
             competitive environment. </li>
           <li>Understand informational give-away included in quotes posted by market participants. </li>
@@ -115,7 +116,8 @@
           <li>Each group will receive one of the numbers in their packs. </li>
           <li>Group members should use this number and the known minimum and maximum boundaries ($14 and $42
             respectively,
-            average $28) to form an idea about the fair value of the price. Based on these estimates, each group must
+            'mid-range' $28, but <a style="font-weight: bold;">unknown average</a>) to form an idea about the fair value
+            of the price. Based on these estimates, each group must
             provide executable prices to the buyside within a given time limit (fixed trade size: 10 units on each side,
             maximum bid/offer spread is $4).</li>
           <li>At the end of each round, buyside clients (facilitators) will execute the best bid and best ask quote (or
@@ -175,31 +177,53 @@
         want to transact if you can get a specific price or better.
         <br>
 
-        
-          $$ \underbrace{ \left[\text{expected price} - \frac{\stackrel{\uparrow}{\text{spread}}}{2}\right]\times
-          \stackrel{\downarrow}{\text{quantity-bought}}}_\text{ high margin but fewer transactions} +
-          \underbrace{\left[\text{expected price} + \frac{\stackrel{\uparrow}{\text{spread}}}{2}\right]\times
-          \stackrel{\downarrow}{\text{quantity-sold}}}_\text{ high margin but fewer transactions}$$
-      
+
+        $$ \underbrace{ \left[\text{expected price} - \frac{\stackrel{\uparrow}{\text{spread}}}{2}\right]\times
+        \stackrel{\downarrow}{\text{quantity-bought}}}_\text{ high margin but fewer transactions} +
+        \underbrace{\left[\text{expected price} + \frac{\stackrel{\uparrow}{\text{spread}}}{2}\right]\times
+        \stackrel{\downarrow}{\text{quantity-sold}}}_\text{ high margin but fewer transactions}$$
 
 
-          <div class="paragraphs">
-            <br>
-            <a style="font-weight:bold; text-decoration:none;">Limit Order Book</a><br>
-            The limit order book is the list of orders (prices at which you can transact) for a given security.
-            <ol>
-              <li>Depending on the security, these orders may be on one exchange, or aggregated across many exchanges.</li>
-              <li>This presentation will give a basic description of the order book, and how your transactions will be
-                handled by (and how they will affect) the book.</li>
-              <li>You will transact in an order book if you trade stock, futures, options, and/or other securities. </li>
-            </ol>
 
-        <br>
-        <div style="float: left;clear: bottom;">
-          <img src="images/fig_sim2.png" width="90%" padding="0" hspace="4%">
+        <div class="paragraphs">
+          <br>
+          <a style="font-weight:bold; text-decoration:none;">Limit Order Book</a><br>
+          The limit order book is the list of orders (prices at which you can transact) for a given security. This
+          describes an order to buy or sell a given quantity of stock at a specified limit price or better. The size is
+          the number of shares to be bought or sold. An order remains in the order book until fully executed, i.e. until
+          its size is zero as a result of trades. Partial executions occur as a result of trades for less than the
+          entire size of the order.
+          <ol>
+            <li>Depending on the security, these orders may be on one exchange, or aggregated across many exchanges.
+            </li>
+            <li>This presentation will give a basic description of the order book, and how your transactions will be
+              handled by (and how they will affect) the book.</li>
+            <li>You will transact in an order book if you trade stock, futures, options, and/or other securities. </li>
+          </ol>
+
+          <br>
+          <div style="float: left;clear: bottom;">
+            <img src="images/fig_sim2.png" width="90%" padding="0" hspace="4%">
+          </div>
+
+          Consider a simple order book containing five limit orders: sell 150 shares of IBM at $11.11, sell 150 shares
+          of IBM at $11.08, buy 100 shares of IBM at $11.05, buy 200 shares of IBM at $11.05, and buy 200 shares of IBM
+          at $11.01. Orders on the bid (ask) side represent orders to buy (sell). The price levels are $11.11, $11.08,
+          $11.05, and $11.01. The best bid at $11.05 (highest bid price) and the best ask at $11.08 (lowest ask price)
+          make up the inside market . The spread ($0.03) is the difference between the best bid and best ask. The
+          midpoint ($11.065) is the average of the best bid and best ask.
+          <br><br>
+          There are four types of messages that traders can submit to an order book: add, cancel , cancel/replace,
+          and market order. A trader can add a limit order in to the order book. She can also cancel an order and
+          remove it from the order book. If a trader wants to reduce the size of her order, she can issue a
+          cancel/replace, which cancels the order, then immediately replaces it with another order at the same price,
+          but with a lower size. Every limit order is assigned a unique ID so that cancel and cancel/replace orders can
+          identify the corresponding limit order. A market order is an order to immediately buy or sell a quantity
+          of stock at the best available prices. A trade occurs when a market order “hits” a limit order on the other
+          side of the inside market. All orders have timestamps indicating the time at which they were accepted into the order book. The timestamp
+          determines the time priority of an order. Earlier orders are executed before later orders.
+
         </div>
-
-      </div>
 
 
 
