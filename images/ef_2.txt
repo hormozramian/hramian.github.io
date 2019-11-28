@@ -1,0 +1,53 @@
+## setup
+rm(list=ls())
+
+.libs = c("tidyverse","tibble","xts","lubridate","sandwich")
+#.ig = lapply(.libs, install.packages, character.only=T, repos="http://cran.ma.imperial.ac.uk/")
+.ig = lapply(.libs, require, character.only=T)
+
+.dp = 3
+set.seed(23183)
+
+options(xtable.floating = FALSE)
+options(xtable.timestamp = "")
+
+## problem 4
+
+# constant: when New England Patriot won Superbowl 49
+const.win_date = ymd("2015-02-01")
+const.file = "problem_4.csv"
+
+# load csv and dates
+data = read_csv(const.file) %>%
+  transform(date=dmy(date))
+
+# create dummary variables
+data = data %>%
+  # D for US stocks, Chinese otherwise
+  mutate(D_i = as.numeric(data$exchange == "nyse")) %>%
+  # T for any date after winning
+  mutate(T_t = as.numeric(data$date > const.win_date))
+
+# run diff-in-diff regression
+result.ols = lm(price ~ D_i*T_t + D_i + T_t, data=data)
+t(summary(result.ols)$coeff)
+summary(result.ols)$adj.r.squared
+
+# calculate weekly average prices for each exchange
+data.avg_price = data %>%
+  group_by(exchange, date) %>%
+  summarize(price=mean(price))
+
+ggplot(data.avg_price, aes(x=date, y=price, col=exchange)) +
+  geom_line() +
+  xlab("Date") +
+  ylab("Average Price") +
+  labs(color='Country (Stocks)') +
+  scale_color_hue(labels = c("US (NYSE)", "China (SSE)")) +
+  geom_vline(xintercept=const.win_date, col="darkblue", linetype="dotted", size=1) +
+  geom_text(aes(x=const.win_date, label="T=0, before win\n\n", y=160),
+            colour="darkgrey", angle=90, text=element_text(size=8)) +
+  geom_text(aes(x=const.win_date, label="T=1, after win\n\n", y=160),
+            colour="darkgrey", angle=-90, text=element_text(size=8)) +
+  theme_bw() +
+  theme(axis.text.x=element_text(angle=45, hjust=1))

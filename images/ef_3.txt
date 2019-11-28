@@ -1,0 +1,97 @@
+## setup
+rm(list=ls())
+
+.libs = c("tidyverse","tibble","xts","lubridate","sandwich","AER")
+#.ig = lapply(.libs, install.packages, character.only=T, repos="http://cran.ma.imperial.ac.uk/")
+.ig = lapply(.libs, require, character.only=T)
+
+.dp = 3
+set.seed(23183)
+
+options(xtable.floating = FALSE)
+options(xtable.timestamp = "")
+
+## problem 1
+
+# constants
+const.file = "problem_5.csv"
+
+# load csv
+data = read_csv(const.file)
+
+# fraction of mothers with more than 2 children
+sum(data$morekids) / dim(data)[1]
+
+# average income for more than 2 children, and for 2 children
+data %>%
+  group_by(morekids) %>%
+  summarise(avg_income=mean(incomem))
+
+# mean(data[data$morekids == 0,]$incomem)
+# mean(data[data$morekids == 1,]$incomem)
+
+# regression of incomem on morekids
+result.ols = lm(incomem ~ morekids, data=data)
+t(summary(result.ols)$coeff)
+summary(result.ols)$adj.r.squared
+
+# first stage OLS regression of morekids on samesex
+morekids.ols = lm(morekids ~ samesex, data=data)
+t(summary(morekids.ols)$coeff)
+summary(morekids.ols)$adj.r.squared
+
+# (using ivreg) iv regression of income on morekids using samesex as the IV
+result.iv = ivreg(incomem ~ morekids|samesex, data=data)
+t(summary(result.iv)$coeff)
+summary(result.iv)$adj.r.squared
+
+# (using 2sls) second stage regression from first stage
+morekids.hat = fitted.values(morekids.ols)
+result.2sls = lm(incomem ~ morekids.hat, data=data)
+t(summary(result.2sls)$coeff)
+summary(result.2sls)$adj.r.squared
+
+# plot the estimaes for OLS and IV regressions
+result.est = data.frame(method=c("OLS","OLS","IV","IV"),
+                   beta=c("beta0","beta1","beta0","beta1"),
+                   estimate=round(as.numeric(c(summary(result.ols)$coeff[,1],
+                                               summary(result.iv)$coeff[,1])), 2),
+                   stderr=round(as.numeric(c(summary(result.ols)$coeff[,2],
+                                             summary(result.iv)$coeff[,2])), 2))
+
+ggplot(result.est, aes(x=beta, y=estimate, fill=method)) +
+  geom_bar(stat="identity", position="dodge") +
+  scale_fill_discrete(name="Regression") +
+  scale_y_continuous(name = "Estimate",
+                     breaks = seq(min(result.est$estimate), max(result.est$estimate), 1000),
+                     labels = seq(min(result.est$estimate), max(result.est$estimate), 1000)) +
+  geom_errorbar(aes(ymin=estimate-stderr, ymax=estimate+stderr),
+                color="grey20", position=position_dodge(.9), width=.2) +
+  xlab("Parameter") +
+  theme_bw()
+
+# regression of incomem on morekids and (control variable) agefstm
+result2.ols = lm(incomem ~ morekids + agefstm, data=data)
+t(summary(result2.ols)$coeff)
+summary(result2.ols)$adj.r.squared
+
+# plot the estimaes for OLS and IV regressions + control variable OLS
+result.est2 = data.frame(method=c("OLS","OLS","IV","IV","OLS (Control)","OLS (Control)"),
+                        beta=c("beta0","beta1","beta0","beta1","beta0","beta1"),
+                        estimate=round(as.numeric(c(summary(result.ols)$coeff[,1],
+                                                    summary(result.iv)$coeff[,1],
+                                                    summary(result2.ols)$coeff[c(1,2),1])), 2),
+                        stderr=round(as.numeric(c(summary(result.ols)$coeff[,2],
+                                                  summary(result.iv)$coeff[,2],
+                                                  summary(result2.ols)$coeff[c(1,2),2])), 2))
+
+ggplot(result.est2, aes(x=beta, y=estimate, fill=method)) +
+  geom_bar(stat="identity", position="dodge") +
+  scale_fill_discrete(name="Regression") +
+  scale_y_continuous(name = "Estimate",
+                     breaks = seq(min(result.est2$estimate), max(result.est2$estimate), 1000),
+                     labels = seq(min(result.est2$estimate), max(result.est2$estimate), 1000)) +
+  geom_errorbar(aes(ymin=estimate-stderr, ymax=estimate+stderr),
+                color="grey20", position=position_dodge(.9), width=.2) +
+  xlab("Parameter") +
+  theme_bw()

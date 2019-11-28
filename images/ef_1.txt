@@ -1,0 +1,179 @@
+## Empirical-Finance: 
+## January 25, 2019
+
+## 1) The Basics ----------------------------------------------------------------------------
+rm(list=ls())                              # Clear working space (variables, memory)
+cat("\f")                                  # Clear console
+dev.off()                                  # Clear plot window
+setwd("D:/Dropbox/Share/T_EF/class3")      # Set up the working directory
+getwd()                                    # Print out current directory 
+#install.packages(".")                     # Installing packages for the first time
+library(tidyverse)                         # Data manipulation, exploration and visualization
+library(xts)                               # Time-based data classes
+D = read.csv("ret.csv", header = T)        # Import Data, with header as variable name
+colnames(D) <- c("x1","x2","x3","x4","x5", # Relabel variables
+                 "x6","x7","x8","x9","x10")
+attach(D)                                  # Database is searched by R when evaluating a
+                                           # variable, so objects in the database can be 
+                                           # accessed by simply giving their names.
+
+N  = dim(D)                                # N is a 1 by 2 vector (N: rows, K: Columns)
+N  = N[1]                                  # Select the first element of N then store on N
+A  = matrix(1,N,1)                         # 1 by N matrix of ones
+Z1 = cbind(x1,x2)                          # Combine two vectors to make an N by 2 matrix 
+Z2 = rbind(x1,x2)                          # Combine two vectors to make an 2 by N matrix 
+X  = data.frame(A,x1,x2,x3,x4,x5)          # Collections of variables 
+
+## 2) Variable Type -------------------------------------------------------------------------
+## 2.1) Vectors/One-dimensional objects
+a <- c(1,2,5.3,6,-2,4)                     # numeric vector
+b <- c("one","two","three","4")            # character vector
+c <- c(TRUE,FALSE,T,F,T,F)                 # logical vector
+
+## 2.2) Data Frames
+d <- c(1,2,3,4)
+e <- c("red","blue","yellow",NA)
+f <- c(T,T,T,F)
+g <- data.frame(d,e,f)
+names(g) <- c("ID","Color","Passed")
+
+## 2.3) Lists (Collection of objects, e.g. a string, vector, matrix, scalers)
+u <- list(name="FS", num=a, mat=f, Term=1)
+v <- list(name="EF", num=b, mat=g, Term=2)
+w <- c(u,v)                                # example of a list containing two lists 
+
+## 3) Visualization -------------------------------------------------------------------------
+par(mfrow=c(2,2))
+
+plot.ts(x1, xlab = "X-axis",ylab = "y-axis")
+title(main = "MSFT")
+
+plot.ts(Z1, plot.type = "single",
+            col = c(rep("red",1),rep("blue",2)))
+title(main = "MSFT, AAPL")
+grid(col = "lightgray", lty = "dotted")
+
+plot(x1,x2)
+hist(x1,24)
+
+#ggplot(D, aes(x = x1, y = x2)) + geom_point() + geom_smooth(method = "lm")
+
+## 4) Least Squares -------------------------------------------------------------------------
+result0 <- lm(x10 ~ x1-1)                  ## OLS without intercept
+result1 <- lm(x10 ~ x1+x2+x3+x4+x5)        ## OLS with intercept
+summary(result1)                           ## Summarize results
+summary(result1)$r.squared                 ## R^2 fraction of variance explained by the model
+summary(result1)$adj.r.squared             ## R^2 adjusted R^2
+summary(result1)$residuals                 ## Residuals
+summary(result1)$coefficients              ## Estimation coefficinets, se's, etc.
+b1 = result1$coefficients                  ## Store beta-hats
+
+## 5) Basic Bperations ----------------------------------------------------------------------
+# Operations                               : statmethods.net/advstats/matrix.html           
+# diag(x)                                  : Creates diagonal matrix from vector, 
+#                                            returns elements on the diagonal of a matrix
+# t(X)                                     : Transpose
+# X*X                                      : Element-wise multiplication
+# X'%*%X                                   : Multiplication
+# solve(X)                                 : inverse of X (X a square matrix)
+# (X'X)^-1                                 : solve(t(X)%*%X)
+# (X'X)^(-1)X'Y                            : solve(t(X)%*%X)%*%t(X)%*%Y 
+X  = as.matrix(X)                          # Convert dataframe to numeric matrix
+Y  = x10                                   # Dependent variable (e.g. PYPL returns)
+b2 = solve(t(X)%*%X)%*%t(X)%*%Y            # OLS parameter estimation using matrices
+B  = cbind(b1,b2)                          # Compare 'lm' versus matrix operation results
+
+## 6) Loop (Portfolio Weights with OLS) -----------------------------------------------------
+n    = dim(D)
+n    = n[1]
+D    = cbind(x1,x2)
+Z    = D - matrix(1,n,1)%*%colMeans(D)
+bhat = solve(t(Z)%*%Z)%*%t(Z)%*%A
+w1   = bhat[1]/(t(matrix(1,2,1))%*%bhat)
+
+window_size = 200
+window_tot  = n - window_size  - 10
+
+w1 <- matrix(0, window_tot, 1)
+
+for (i in c(1:window_tot)) {
+    Q     = cbind(x1[i:(window_size+i-1)],
+                  x2[i:(window_size+i-1)])
+    Y     = A[i:(window_size+i-1)]
+    Qbar  = matrix(1,window_size,1)%*%colMeans(Q)
+    Q     = Q - Qbar
+    bhat  = solve(t(Q)%*%Q)%*%t(Q)%*%Y
+    w1[i] = bhat[1]/(t(matrix(1,2,1))%*%bhat)
+}
+
+plot(w1)
+
+par(mfrow=c(1,1))
+w1 <- ts(w1, frequency = 12, start = 1961)
+plot(w1, major.format = "%Y-%m", ylim=c(-.25,1.25))
+grid()
+
+## 7) Loops (rolling regression, CAPM) ------------------------------------------------------
+rm(list = ls())
+cat("\f")
+dev.off()
+setwd("D:/Dropbox/Share/T_EF/class3")
+library(ggplot2)
+library(tidyverse)
+library(xts)
+
+D = read.csv("sp.csv", header=TRUE)
+colnames(D) <- c("id","price","index","inf","tbill")
+
+N = dim(D)
+N = N[1]
+y = diff(log(D$price))-diff(log(D$tbill))
+X <- data.frame(matrix(1, N-1, 1), diff(log(D$index))-diff(log(D$tbill)))
+
+window_size = 24
+window_tot  = N - window_size  - 10
+
+b_roll <- matrix(0, window_tot, 2)
+R2     <- matrix(0, window_tot, 1)
+
+for (i in c(1:window_tot)) {
+  
+  rol_X = X[i:(window_size+i-1),]
+  rol_y = y[i:(window_size+i-1)]
+  b_roll[i,1:2] = t(  solve(t(rol_X)%*%as.matrix(rol_X))%*%t(rol_X)%*%as.matrix(rol_y)  )
+  result <- lm(rol_y ~ 1 + as.matrix(rol_X))
+  R2[i] = summary(lm(rol_y ~ 1 + as.matrix(rol_X)))$adj.r.squared
+  
+}
+
+par(mfrow=c(1,1))
+b_roll <- ts(b_roll, frequency = 12, start = 1961)
+plot(b_roll[,2], major.format = "%Y-%m", ylim=c(0,2))
+grid()
+
+plot.ts(R2)
+
+## 9) Acquire Financial Data Directly Into R Environment ------------------------------------
+rm(list = ls())
+cat("\f")
+#install.packages('Quandl')
+library(Quandl)
+
+# FRED Series
+# 'UNRATE';      % Civilian Unemployment Rate
+# 'INDPRO';      % Industrial Production Index
+# 'USRECM';      % NBER-based Recession Indicators for the United States
+# 'NASDAQCOM';   % NASDAQ Composite Index
+# 'DJIA';        % Dow Jones Industrial Average
+# 'RU3000TR';    % Russell 3000 Total Market Index
+
+D1 = Quandl("FRED/UNRATE", start_date="1948-01-01",end_date="2018-12-30",type="xts")
+D2 = Quandl("FRED/INDPRO", start_date="1948-01-01",end_date="2018-12-30",type="xts")
+D3 = Quandl("FRED/USRECM", start_date="1948-01-01",end_date="2018-12-30",type="xts")
+D  = cbind(D1,D2,D3)
+colnames(D) <- c("UNRATE","INDPRO","USRECM")
+
+plot.ts(D1)
+plot.ts(D2)
+plot.ts(D3)
+
