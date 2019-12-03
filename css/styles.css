@@ -124,10 +124,10 @@ line-height: 18px;
 }
 
 ul.refs {
-  width: 650px; 
+  width: 750px; 
   columns: 2;
   margin: 0;
-  padding:0;
+  padding: 0;
   display:inline-block;
   text-align: left;
 
