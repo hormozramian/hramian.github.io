@@ -38,11 +38,12 @@ body {
   position: fixed;
   float: left;
   height: calc(100% - 150px);
+  min-width: calc(100% - 10px);
   top: 139px;
   padding-top: 10px;
   overflow-y: scroll;
-  min-width: calc(100% - 10px);
-}
+  
+  }
 
 .contents_home {
   position: relative;
