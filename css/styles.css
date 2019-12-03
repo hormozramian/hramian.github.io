@@ -137,6 +137,7 @@ ul.refs li{
   margin: 0;
   padding: 0;
   display:inline-block;
+  text-align: left;
 }
 
 ul.refs2 {
