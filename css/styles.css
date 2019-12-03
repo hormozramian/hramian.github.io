@@ -135,9 +135,9 @@ ul.refs {
   margin: 0px;
   padding-top: 0px;
   padding-left: 0px;
-  padding-right: 5px;
+  padding-right: 0px;
   padding-bottom: 0px;
-  display:inline-block;
+
   
 
 }
@@ -146,7 +146,7 @@ ul.refs li{
   margin: 0;
   padding-left: 0px;
   padding-right: 5px;
-  display:inline-block;
+  list-style-type: none;
   
 }
 
