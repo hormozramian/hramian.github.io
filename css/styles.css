@@ -127,6 +127,7 @@ ul.refs {
   width: 650px; 
   columns: 2;
   margin: 0px;
+  padding-left: 0px;
   padding-right: 5px;
   display:inline-block;
   
@@ -135,6 +136,7 @@ ul.refs {
 
 ul.refs li{
   margin: 0;
+  padding-left: 0px;
   padding-right: 5px;
   display:inline-block;
   
