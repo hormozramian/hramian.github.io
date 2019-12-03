@@ -36,7 +36,7 @@ body {
   top: 139px;
   padding-top: 10px;
   overflow-y: scroll;
-  min-width: calc(100% - 20px);
+  min-width: calc(100% - 10px);
 }
 
 .contents_home {
@@ -126,9 +126,10 @@ line-height: 18px;
 ul.refs {
   width: 650px; 
   columns: 2;
-  margin: 0px;
+  margin: 5px;
   padding-left: 0px;
   padding-right: 5px;
+  padding-bottom: 5px;
   display:inline-block;
   
 
