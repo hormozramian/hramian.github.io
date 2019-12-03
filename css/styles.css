@@ -126,8 +126,8 @@ line-height: 18px;
 ul.refs {
   width: 650px; 
   columns: 2;
-  margin: 0;
-  padding: 0;
+  margin: 2px;
+  padding: 2px;
   display:inline-block;
   
 
