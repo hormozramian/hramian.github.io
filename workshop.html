@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<link rel="shortcut icon" href="images/ico.png">
+
+<head>
+    <style>
+        .collapsible {
+            background-color: rgb(248, 248, 255);
+            color: rgb(0, 0, 0);
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-family: 'Lato';
+            font-weight: bold;
+            font-size: 12pt;
+        }
+
+        .active,
+        .collapsible:hover {
+            background-color: rgb(255, 255, 255);
+        }
+
+        .content {
+            padding: 0 10px;
+            display: none;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+    </style>
+
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-153284711-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-153284711-1');
+    </script>
+
+    <title>Empirical Finance</title>
+
+
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Old+Standard+TT&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono|'Roboto Mono'&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Libre+Caslon+Text&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="contents_0">
+
+        <a href="http://www.imperial.ac.uk/people/h.ramian"
+            style="font-weight:bold; text-decoration:none; font-size:larger; color: black">Hormoz Ramian</a> <br>
+        PhD Candidate in Finance<br>
+        Imperial College London<br>
+
+        <div class="contents_bar">
+            <ul class="topnav">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="research.html" class="active">Research</a></li>
+                <li><a href="vitae.html">CV</a></li>
+                <li><a href="teaching.html">Teaching</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="contents">
+
+            
+
+            <button type="button" class="collapsible">Job Market Paper:
+                Optimal Financial Regulation</button>
+            <div class="content">
+                <p>I show that when the banking sector's assets comprise large
+                    excess reserves and loans, jointly determined capital regulation and interest-on-excess-reserves
+                    (IOER)
+                    policies provide welfare gains. In general equilibrium, falling IOER is associated with a
+                    proportional fall in
+                    deposit rate only when IOER is above the zero bound. This leads to a faster fall in the bank's
+                    interest
+                    expenses than its interest incomes. Given any lending level, lower net interest expenses enhance
+                    bank
+                    solvency. Nonetheless, the risk-weighted capital regulation remains unchanged and hence becomes
+                    socially
+                    costly. I show that jointly determined policies achieve welfare gains by loosening the capital
+                    requirement and
+                    lowering IOER to expand the credit flow, while bank failure likelihood remains constant. Conversely,
+                    lowering
+                    IOER below the zero bound is associated with a nonresponsive deposit rate that leads to growing net
+                    interest
+                    expenses and worsening bank solvency. In that case, I show that a stricter capital constraint
+                    together with a
+                    lower IOER provide social value.</p>
+            </div>
+            <button type="button" class="collapsible">Financial Regulation and Wealth
+                Distribution</button>
+            <div class="content">
+                <p>Financial regulation provides welfare gains to the society, at the expense of an exacerbated wealth
+                    distribution. I
+                    show that when capital markets are segmented, financial regulation leads to a transfer of wealth from depositors
+                    to equity investors. An integrated monetary and financial regulatory policy achieves welfare gains due to a
+                    credit flow expansion to the real sector, while default likelihood within the banking sector remains fixed.
+                    Nonetheless, this constrained equilibrium allocation is associated with lower deposit rate while dividends
+                    increase, leading to a wealth transfer across market segments. I provide sufficient conditions under which
+                    optimal financial regulation leads to welfare gains without exacerbating wealth heterogeneity.</p>
+            </div>
+            <button type="button" class="collapsible">Pay Banks to Lend: Targeted Long-Term
+                Refinancing Operations and the Fiscal Stimulus</button>
+            <div class="content">
+                <p>The aftermath of the financial crisis inherited heightened economic uncertainty and low productivity. These
+                    features prompted the banking sectors across the developed economies to rely heavily on excess reserves offered
+                    by the central banks despite the negative nominal interest-on-excess-reserve (IOER) policy. Nonetheless, the
+                    negative relationship between the overall interest expenses of the banking sector with the IOER around the zero
+                    lower bound further exacerbates the over-reliance on excess reserves particularly when rates are negative. This
+                    paper shows that the new Targeted Long-Term Refinancing Operations (TLTRO) policy adopted by the central banks
+                    leads to expansionary effects when the refinancing lending rates fall below the IOER. I first provide a social
+                    welfare maximizing approach to determine the optimal borrowing limit. Second, I show that the policymaker's
+                    decision to finance the deficit due to remunerations depends on the trade-offs between the social gains
+                    associated with the expansion of lending to the real sector against the social costs of monetary tools (creating
+                    money to finance the gap) the fiscal stimulus.</p>
+            </div>
+
+            <script>
+                var coll = document.getElementsByClassName("collapsible");
+                var i;
+
+                for (i = 0; i < coll.length; i++) {
+                    coll[i].addEventListener("click", function () {
+                        this.classList.toggle("active");
+                        var content = this.nextElementSibling;
+                        if (content.style.display === "block") {
+                            content.style.display = "none";
+                        } else {
+                            content.style.display = "block";
+                        }
+                    });
+                }
+            </script>
+
+
+
+
+        </div>
+
+    </div>
+    </div>
+
+</body>
+
+</html>
