@@ -1,0 +1,4 @@
+I am an Assistant Professor of Finance at the <a
+          href="https://www.gla.ac.uk/schools/business/research/centres/finance/">Adam Smith Business School</a> and a
+        research associate at <a href="https://www.cerf.cam.ac.uk/">Cambridge Judge Business School</a>. My research
+        interests are Macroeconomics, Finance, Asset Pricing, Banking and Financial Regulation.
