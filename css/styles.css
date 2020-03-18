@@ -68,7 +68,8 @@ body {
   position: relative;
   float: left;
   width: calc(100% - 300px);
-  
+  padding-top: 10px;
+  padding-left: 2px;
 }
   
 
