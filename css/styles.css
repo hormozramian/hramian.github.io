@@ -1,9 +1,10 @@
+
 html {
   overflow-y: hidden;
   overflow-x: hidden;
-  font-family: 'Lato', 'Calibri',  'Old Standard TT', serif;
   font-size: 15px;
   line-height: 1.5;
+  font-family: 'Lato', 'Calibri',  'Old Standard TT', serif;
   background: rgb(255,255,255);
   background: linear-gradient(0deg, rgba(255, 255, 255, 0.1) 90%, rgba(209, 216, 252, 0.397) 97.5%); 
   background-repeat: no-repeat;
@@ -16,7 +17,9 @@ html {
   left: 0;
   right: 0;
 }
- 
+
+
+
 body {
   position: relative;
   float: left;
